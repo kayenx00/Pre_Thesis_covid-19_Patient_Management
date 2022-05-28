@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Add Doctor</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="center">
+      <h1>Add Doctor</h1>
+      <form action = '/adddoctor' method="post">
+        <div class="txt_field">
+          <input name = "Dusername" id = "Dusername" type="Dusername" required>
+          <span></span>
+          <label>Username</label>
+        </div>
+        <div class="txt_field">
+          <input name = "Dpassword" id = "Dpassword" type="Dpassword" required>
+          <span></span>
+          <label>Password</label>
+        </div>
+        <div class="txt_field">
+            <input name = "Demail" id = "Demail" type="Demail" required>
+            <span></span>
+            <label>Email</label>
+        </div>
+        <div class="txt_field">
+          <input name = "doctorName" id = "doctorName" type="doctorName" required>
+          <span></span>
+          <label>Doctor Full Name</label>
+        </div>
+        
+        <div class="txt_field">
+          <input name = "doctorPhone" id = "doctorPhone" type="doctorPhone" required>
+          <span></span>
+          <label>Doctor Phone</label>
+        </div>
+        
+        <!-- <div class="txt_field">
+          <input name = "district" id = "district" type="District" required>
+          <span></span>
+          <label>District</label>
+        </div> -->
+        
+        <input type="submit" value="Submit">
+
+<!-- 
+        <div class="pass">Forgot Password?</div>
+        <input type="submit" value="Login">
+        <div class="signup_link">
+          Not a member? <a href="#">Signup</a>
+        </div>
+ -->
+      </form>
+      <br>
+      <form action="/" method = "get">
+        <div class="Log-out">
+            <input type="submit" value = "Log out">
+        </div>
+
+      </form>
+    </div>
+
+  </body>
+</html>
