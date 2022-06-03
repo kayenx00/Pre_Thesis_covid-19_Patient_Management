@@ -1,41 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Fetch using MySQL and Node.js</title>
+  <title>Patient information</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="table-data">
-<h2>Display Data using Node.js & MySQL</h2>
-    <table border="1">
-        <tr>
-            <th>Full Name</th>
-            <th>Email Address</th>
-            <th>City</th>
-            <th>Country</th>
-            <th>Country</th>
-            <th>Country</th>
-
-        </tr>
-        
-        <%
-        if(userData.length!=0){
-        userData.forEach(function(data){
-        %>
-        <tr>
-            <td><%=data.Patient_Name %></td>
-            <td><%=data.Patient_ID %></td>
-            <td><%=data.email %></td>
-            <td><%=data.phone %></td>
-            <td><%=data.city %></td>
-            <td><%=data.district %></td>
-        </tr>
-        <% }) %>
-        <% } else{ %>
+        <h2>Patient information</h2>
+        <table>
+            <% if(userData.length!= 0){
+                userData.forEach(function(data) {%>
             <tr>
-                <td colspan="7">No Data Found</td>
+                <td>Full Name: </td>
+                <td><%=data.Patient_Name %></td>
             </tr>
-        <% } %>
-    </table>
+            <tr>
+                <td>ID: </td>
+                <td><%=data.Patient_ID %></td>
+            </tr>            
+            <tr>
+                <td>Email: </td>
+                <td><%=data.email %></td>
+            </tr>            
+            <tr>
+                <td>Phone Number: </td>
+                <td><%=data.phone %></td>
+            </tr>            
+            <tr>
+                <td>City: </td>
+                <td><%=data.city %></td>
+            </tr>            
+            <tr>
+                <td>District: </td>
+                <td><%=data.district %></td>
+            </tr>
+            <div>
+                <% if(data.Chosen_Doctor == null) { %>
+                    <tr>
+                        <td>
+                            <div class="signup_link">
+                            <form action="/registerDoctor" method = "get">
+                                <input type="submit" value = "Register Doctor">
+                            </form>
+                            </div>
+                        </tr>
+                    </td>
+                    <tr>
+                        <td>
+                            <div class="signup_link">
+                            <form action="/viewDoctor" method = "get">
+                                <input type="submit" value = "View all Doctor">
+                            </form>
+                            </div>
+                        </td>
+                    </tr>    
+                <% }else { %>
+                    <tr>
+                        <td>
+                            <div class="signup_link">
+                                <form action="/healthDeclare" method = "get">
+                                    
+                                    <input type="submit" value = "Health Declaration">
+                                </form>
+                            </div>  
+                        </td>
+                    </tr>
+                <% } %>
+            </div>
+            <% }) %>
+            <% } else{ %>
+                <tr>
+                    <td colspan="7">No Data Found</td>
+                </tr>
+            <% } %>
+                <!-- <td>ID: </td>
+                <td>Email: </td>
+                <td>Phone: </td>
+                <td>City: </td>
+                <td>District: </td>
+
+            </tr> -->
+            <!-- <%
+                if(userData.length!=0){
+                userData.forEach(function(data){
+            %>
+            <tr>
+            </tr>
+            <% }) %>
+            <% }else{ %>
+                <tr>
+                    <td colspan="7">No Data Found</td>
+                </tr>
+            <% } %> -->
+
+        </table>
     </div>
+
+
+
 </body>
 </html>

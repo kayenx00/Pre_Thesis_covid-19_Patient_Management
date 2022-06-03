@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Fetch Doctor data</title>
+</head>
+<body>
+    <div class="table-data">
+<h2>Patient Declaration information</h2>
+    <table border="1">
+        <tr>
+            <th>Patient_ID</th>
+            <th>Patient Name</th>
+            <th>Blood_Pressure</th>
+            <th>Oxygen_level</th>
+            <th>Other_Diagnose</th>
+            <th>last_update</th>
+
+        </tr>        
+        <%
+        if(userData.length!=0){
+        userData.forEach(function(data){
+        %>
+        <tr>
+            <td><%=data.Patient_ID %></td>
+            <td><%=data.Patient_Name %></td>
+            <td><%=data.Blood_Pressure %></td>
+            <td><%=data.Oxygen_level %></td>
+            <td><%=data.Other_Diagnose%></td>
+            <td><%=data.last_update%></td>
+        </tr>
+        <%  }) %>
+
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+    </table>
+    <br>
+    <form action="/doctorView" method = "get" > 
+        <input type="submit" value = "Back">
+    </form>
+    </div>
+</body>
+</html>

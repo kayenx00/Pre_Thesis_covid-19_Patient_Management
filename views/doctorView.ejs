@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Doctor information</title>
+</head>
+<body>
+    <div class="table-data">
+        <h2>Doctor information</h2>
+        <table>
+            <% if(userData.length!= 0){
+                userData.forEach(function(data) {%>
+            <tr>
+                <td>Full Name: </td>
+                <td><%=data.Doctor_name %></td>
+            </tr>
+            <tr>
+                <td>Email: </td>
+                <td><%=data.Doctor_email %></td>
+            </tr>            
+            <tr>
+                <td>Phone Number: </td>
+                <td><%=data.Doctor_phone%></td>
+            </tr>            
+
+            <tr>
+                <td>
+                    <form action="/viewPatientDeclaration" method = "get">
+                        <input type="submit" value ="View Declaration">
+                    </form>
+                </td>
+            </tr>
+
+            <% }) %>
+            <% } else{ %>
+                <tr>
+                    <td colspan="7">No Data Found</td>
+                </tr>
+            <% } %>
+                <!-- <td>ID: </td>
+                <td>Email: </td>
+                <td>Phone: </td>
+                <td>City: </td>
+                <td>District: </td>
+
+            </tr> -->
+            <!-- <%
+                if(userData.length!=0){
+                userData.forEach(function(data){
+            %>
+            <tr>
+            </tr>
+            <% }) %>
+            <% }else{ %>
+                <tr>
+                    <td colspan="7">No Data Found</td>
+                </tr>
+            <% } %> -->
+
+        </table>
+    </div>
+
+
+
+</body>
+</html>

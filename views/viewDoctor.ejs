@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Fetch Doctor data</title>
+</head>
+<body>
+    <div class="table-data">
+<h2>Doctors information</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email Address</th>
+            <th>Phone</th>
+
+        </tr>        
+        <%
+        if(userData.length!=0){
+        userData.forEach(function(data){
+        %>
+        <tr>
+            <td><%=data.ID %></td>
+            <td><%=data.Doctor_name %></td>
+            <td><%=data.Doctor_email %></td>
+            <td><%=data.Doctor_phone %></td>
+        </tr>
+        <%  }) %>
+
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+    </table>
+    <br>
+    <form action="/patientView" method = "get" > 
+        <input type="submit" value = "Back">
+    </form>
+    </div>
+</body>
+</html>
