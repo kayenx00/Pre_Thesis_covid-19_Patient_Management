@@ -130,7 +130,7 @@ app.post('/auth', function(request, response) {
 						response.redirect('../patientView');
 					}
 					else if (string == 'Doctor'){
-						response.redirect('../doctorhomepage');
+						response.redirect('../doctorView');
 					}
 					
 					else if (string == 'Admin'){
@@ -159,9 +159,10 @@ app.get('/patientView', function(request, response, next) {
 		let username = request.session.username;
 		console.log(username);
         // this script to fetch data from MySQL databse table
-		connection.query('SELECT Patient_Name, Patient_ID, email, phone, city, district FROM Patient where Patient_Account = ?',[username], function (err, data, fields) {
+		connection.query('SELECT Patient_Name, Patient_ID, email, phone, city, district, Chosen_Doctor FROM Patient where Patient_Account = ?',[username], function (err, data, fields) {
 			if (err) throw err;
 			else {
+				request.session.username = username;
 				console.log(data);
 				response.render('patientView', { title: 'patientView', userData: data})};
 	  });
@@ -170,10 +171,105 @@ app.get('/patientView', function(request, response, next) {
 		// Not logged in
 		response.send('Please login to view this page!');
 	}
-	response.end();
 	
 
 });
+app.get('/viewDoctor', function(request, response, next){
+	connection.query('SELECT * FROM Doctor', function(err, data, fields){
+		if(err) throw err;
+		else{
+			console.log(data);
+			response.render('viewDoctor', {title: 'viewDoctor', userData: data})
+		};
+	});
+});
+
+app.get('/registerDoctor', function(request, response){
+	response.sendFile(path.join(__dirname + '/view/Doctor_Register.html'));
+});
+
+app.post('/RegisterDoctor', function(request, response){
+	let Doctor_ID = request.body.Doctor_ID;
+	let username = request.session.username; 
+	console.log(username);
+	if(request.body.Doctor_ID){
+		connection.query('Update Patient set Chosen_Doctor = ? WHERE Patient_Account = ? ', [Doctor_ID, username], function(err, results, fileds) {
+			if(err) throw err; 
+			response.redirect('/patientView');
+		})
+	}
+});
+
+app.get('/healthDeclare', function(request, response){
+	response.sendFile(path.join(__dirname + '/view/Health_Declaration.html'));
+});
+
+app.post('/Health_Declare', function(request, response){
+	let username = request.session.username;
+	let Blood_Pressure = request.body.Blood_Pressure;
+	let Oxygen_level = request.body.Oxygen_level;
+	let Other_Diagnose = request.body.Other_Diagnose;
+	if(Blood_Pressure && Oxygen_level && Other_Diagnose){
+		connection.query('SELECT ID as Patient_ID FROM Patient where Patient_Account = ?', [username], function(err, results, fields){
+			if(err) throw err;
+			else{
+				let Patient_ID = results[0].Patient_ID;
+				let ts = Date.now();
+				let date_ob = new Date(ts);
+				let date = date_ob.getDate();
+				let month = date_ob.getMonth() + 1;
+				let year = date_ob.getFullYear();
+				let full_Date = year + "-" + month + "-" + date;
+				// prints date & time in YYYY-MM-DD format
+				console.log(full_Date);	
+				connection.query('INSERT INTO Health_Information(Patient_ID, Blood_Pressure, Oxygen_level, Other_Diagnose, last_update) values (?,?,?,?,?)', [Patient_ID, Blood_Pressure, Oxygen_level, Other_Diagnose, full_Date], function(err, results, fileds){
+					if(err) throw err;
+					console.log(results);
+					response.redirect('/patientView');
+				});
+				}
+
+		});
+	}
+});
+
+// Doctor section 
+
+app.get('/doctorView', function(request, response, next){
+	if(request.session.loggedin){
+		let username = request.session.username;
+		console.log(username);
+        // this script to fetch data from MySQL databse table
+		connection.query('SELECT Doctor_name, Doctor_email, Doctor_phone FROM Doctor where Doctor_Account = ?',[username], function (err, data, fields) {
+			if (err) throw err;
+			else {
+				request.session.username = username;
+				console.log(data);
+				response.render('doctorView', { title: 'doctorView', userData: data})};
+	  });
+	}
+	else {
+		// Not logged in
+		response.send('Please login to view this page!');
+	}
+
+});
+
+app.get('/viewPatientDeclaration', function(request, response, next){
+	let username = request.session.username;
+	connection.query('SELECT ID as Doctor_ID FROM Doctor where Doctor_Account = ?', [username], function(err, results, fields){
+		if(err) throw err;
+		else{
+			let ID = results[0].Doctor_ID;
+			connection.query('SELECT h.Patient_ID, p.Patient_Name, h.Blood_Pressure, h.Oxygen_level, h.Other_Diagnose, h.last_update from Patient p, Health_Information h where h.Patient_ID = p.ID and p.Chosen_Doctor = ? Order by h.Patient_ID DESC, p.Patient_Name DESC, h.last_update ASC', [ID], function(err, data, next){
+				console.log(data);
+				response.render('viewPatientDeclaration', { title: 'viewPatientDeclaration', userData: data});
+			});
+		}
+	});
+});
+
+
 // Admin section
 
 app.get('/addDoctor', function(request, response) {
@@ -213,7 +309,14 @@ app.post('/adddoctor', function(request, response){
 	}
 });
 
-// Doctor section 
+
+
+
+
+
+
+
+
 
 app.get('/home', function(request, response) {
 	// If the user is loggedin
