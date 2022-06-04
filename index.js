@@ -134,7 +134,7 @@ app.post('/auth', function(request, response) {
 					}
 					
 					else if (string == 'Admin'){
-						response.redirect('../addDoctor');
+						response.redirect('../adminView');
 					}
 				})
 				// Redirect to home page
@@ -272,6 +272,17 @@ app.get('/viewPatientDeclaration', function(request, response, next){
 
 // Admin section
 
+app.get('/adminView', function(request, response){
+
+	if(request.session.loggedin){
+		let username = request.session.username;
+		response.sendFile(path.join(__dirname + '/view/AdminWork.html'));
+	}else {
+		// Not logged in
+		response.send('Please login to view this page!');
+	}
+})
+
 app.get('/addDoctor', function(request, response) {
 	// If the user is loggedin
 	if (request.session.loggedin) {
@@ -303,6 +314,39 @@ app.post('/adddoctor', function(request, response){
 						response.redirect('../addDoctor');
 					}
 				});
+			}
+		});
+
+	}
+});
+
+
+app.get('/modifyDoctor', function(request, response){
+	response.sendFile(path.join(__dirname + '/view/modifyDoctor.html'));
+});
+
+app.post('/modifydoctor', function(request, response){
+	let Did = request.body.Did;
+	let Demail = request.body.Demail;
+	let doctorName = request.body.doctorName;
+	let doctorPhone = request.body.doctorPhone;
+
+	if(Did && Demail && doctorName && doctorPhone){
+		connection.query("Select * from Doctor where ID = ? ", [Did], function(error, results, fields){
+			if (error) {
+				throw error;
+				console.log(results);}
+			if (results.length > 0){
+				connection.query('Update Doctor set Doctor_email = ?, Doctor_name = ?, Doctor_phone = ? where ID = ?', [Demail,doctorName,doctorPhone,Did], function(err, results, fields){
+					if(err) throw err;
+					else{
+						response.redirect('/modifyDoctor');
+					}
+				});
+			}
+			else{
+				alert("Doctor ID is not exist !!")
+				response.redirect('/modifyDoctor');
 			}
 		});
 
